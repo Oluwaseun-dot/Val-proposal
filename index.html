@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? ❤️</title>
+    <style>
+        :root {
+            --val-red: #ff4d6d;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            touch-action: manipulation; /* Improves mobile tap response */
+        }
+
+        /* Responsive Rectangle Cardbox */
+        .card-box {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 40px 25px;
+            width: 85%; /* Mobile friendly width */
+            max-width: 350px; /* PC friendly limit */
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+            color: white;
+            transition: height 0.3s ease;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            position: relative;
+            height: 60px; /* Extra height to allow button movement within container */
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            -webkit-tap-highlight-color: transparent; /* Removes blue flash on mobile */
+        }
+
+        #yesBtn {
+            background-color: var(--val-red);
+            color: white;
+            z-index: 10; /* Keeps Yes on top */
+        }
+
+        #noBtn {
+            background-color: white;
+            color: var(--val-red);
+            position: absolute;
+            left: 55%;
+            z-index: 5;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #congratsSection {
+            display: none;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .emoji {
+            font-size: 3rem;
+            display: block;
+            margin: 15px 0;
+        }
+
+        .heart {
+            position: absolute;
+            color: var(--val-red);
+            animation: fly 3s linear forwards;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        @keyframes fly {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="card-box" id="mainCard">
+        <div id="questionSection">
+            <h1>Will you be my Val? 🌹</h1>
+            <div class="btn-container">
+                <button class="btn" id="yesBtn" onclick="showCongrats()">Yes</button>
+                <button class="btn" id="noBtn" 
+                        onmouseover="moveNo()" 
+                        ontouchstart="moveNo()" 
+                        onclick="moveNo()">No</button>
+            </div>
+        </div>
+
+        <div id="congratsSection">
+            <h1>Congratulations! 🎉</h1>
+            <p style="font-size: 1rem; line-height: 1.5;">Dey Play oo Val Ko Val ni for this Rogbodiyanyi 😂</p>
+            <span class="emoji">🙌🏽Face your study girl, and Sorry for the Joke</span>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const card = document.getElementById('mainCard');
+        const music = document.getElementById('bgMusic');
+
+        function moveNo() {
+            // Calculate movement within the card box specifically
+            // We use clientWidth/Height to ensure it stays inside the borders
+            const padding = 20;
+            const maxX = card.clientWidth - noBtn.clientWidth - padding;
+            const maxY = card.clientHeight - noBtn.clientHeight - padding;
+            
+            // Generate a random position
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            // Apply new position
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        function showCongrats() {
+            try { music.play(); } catch(e) {} // Play music if browser allows
+            document.getElementById('questionSection').style.display = 'none';
+            document.getElementById('congratsSection').style.display = 'block';
+            
+            // Heart Explosion
+            for(let i=0; i<40; i++) {
+                createHeart();
+            }
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            heart.style.animationDuration = Math.random() * 2 + 2 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
